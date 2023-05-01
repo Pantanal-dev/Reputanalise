@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from getpass import getpass
 import time 
 import csv
+import pandas as pd
 
 def get_tweet_data(card):
     # username , getting the first span tag after the current tag
@@ -85,7 +86,7 @@ search_input = WebDriverWait(chrome_driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div/form/div[1]/div/div/div/label/div[2]/div/input'))
 )
 # search_input = chrome_driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div/form/div[1]/div/div/div/label/div[2]/div/input')
-search_input.send_keys('#neoway')
+search_input.send_keys('#shien lang:pt')
 search_input.send_keys(Keys.RETURN)
 
 latest_tab = WebDriverWait(chrome_driver, 10).until(
@@ -111,12 +112,16 @@ while scrolling:
     if len(cards) > 0:
         # only care about the last 15 items 
         for card in cards[-15:]:
-            data = get_tweet_data(card)
-            if data:
-                tweet_id = ''.join(data)
-                if tweet_id not in tweet_ids:
-                    tweet_ids.add(tweet_id)
-                    tweet_data.append(data)
+            if len(tweet_data) < 1200:
+                data = get_tweet_data(card)
+                if data:
+                    tweet_id = ''.join(data)
+                    if tweet_id not in tweet_ids:
+                        tweet_ids.add(tweet_id)
+                        tweet_data.append(data)
+            else:
+                scrolling=False
+                break
     else:
         # Print text in red
         raise NoSuchElementException('No cards were found')
@@ -141,9 +146,10 @@ while scrolling:
             break
         
 # saving the tweet 
-with open('neoway.csv','w',newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter=',')
-    header = ['username','handle','postDate','responding','retweets','likes']
-    writer.writerow(header)
-    for row in tweet_data:
-        writer.writerow(row)
+import pandas as pd
+
+header = ['username', 'handle', 'postDate', 'responding', 'retweets', 'likes']
+
+df = pd.DataFrame(tweet_data, columns=header)
+print (df)
+df.to_csv('shien.csv', index=False)
