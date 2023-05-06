@@ -86,7 +86,7 @@ search_input = WebDriverWait(chrome_driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div/form/div[1]/div/div/div/label/div[2]/div/input'))
 )
 # search_input = chrome_driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[2]/main/div/div/div/div[2]/div/div[2]/div/div/div/div[1]/div/div/div/form/div[1]/div/div/div/label/div[2]/div/input')
-search_input.send_keys('#shien lang:pt')
+search_input.send_keys('#cargil lang:pt')
 search_input.send_keys(Keys.RETURN)
 
 latest_tab = WebDriverWait(chrome_driver, 10).until(
@@ -152,4 +152,4 @@ header = ['username', 'handle', 'postDate', 'responding', 'retweets', 'likes']
 
 df = pd.DataFrame(tweet_data, columns=header)
 print (df)
-df.to_csv('shien.csv', index=False)
+df.to_csv('cargil.csv', index=False)
